@@ -127,15 +127,28 @@ async function handleAIRequest(text, sendResponse) {
   try {
     const { service, model } = await getCurrentService();
     const apiKey = await getApiKey(service);
+    const settings = await chrome.storage.sync.get(['targetLang']);
+    const targetLang = settings.targetLang || 'zh';
     
     if (!apiKey) {
       throw new Error('API key not found. Please set it in the extension settings.');
     }
 
+    const languageMap = {
+      'zh': '中文',
+      'en': 'English',
+      'ja': '日本語',
+      'ko': '한국어',
+      'fr': 'French',
+      'de': 'German',
+      'es': 'Spanish',
+      'auto': 'the same language as the input text'
+    };
+
     const messages = [
       {
         role: "system",
-        content: "You are a text summarization assistant. Your task is to provide clear, concise summaries of the given text while maintaining the key points and important details. Keep the summary focused and well-structured. Regardless of the language of the input text, please reply in Chinese."
+        content: `You are a text summarization assistant. Your task is to provide clear, concise summaries of the given text while maintaining the key points and important details. Keep the summary focused and well-structured. Please provide the summary in ${languageMap[targetLang]}.`
       },
       {
         role: "user",

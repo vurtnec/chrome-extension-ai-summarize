@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const serviceSelect = document.getElementById('service');
   const modelSelect = document.getElementById('model');
   const apiKeyInput = document.getElementById('apiKey');
+  const targetLangSelect = document.getElementById('targetLang');
   const saveButton = document.getElementById('saveButton');
   
   // 从后台页面获取配置
@@ -12,9 +13,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   
   // 加载保存的设置
-  const settings = await chrome.storage.sync.get(['service', 'model']);
+  const settings = await chrome.storage.sync.get(['service', 'model', 'targetLang']);
   const currentService = settings.service || 'openrouter';
+  const currentLang = settings.targetLang || 'zh';
+  
   serviceSelect.value = currentService;
+  targetLangSelect.value = currentLang;
   
   // 加载API密钥
   const apiKeyResult = await chrome.storage.sync.get([`${currentService}_api_key`]);
@@ -44,10 +48,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 加载对应服务的API密钥
     const apiKeyResult = await chrome.storage.sync.get([`${service}_api_key`]);
     apiKeyInput.value = apiKeyResult[`${service}_api_key`] || '';
-    
-    // 如果是Ollama，隐藏API密钥输入
-    // const apiKeyGroup = document.querySelector('.api-key-group');
-    // apiKeyGroup.style.display = service === 'ollama' ? 'none' : 'block';
   });
   
   // 保存设置
@@ -55,12 +55,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const service = serviceSelect.value;
     const model = modelSelect.value;
     const apiKey = apiKeyInput.value;
+    const targetLang = targetLangSelect.value;
     
     try {
       // 保存设置
       await chrome.storage.sync.set({
         service: service,
         model: model,
+        targetLang: targetLang,
         [`${service}_api_key`]: apiKey
       });
       

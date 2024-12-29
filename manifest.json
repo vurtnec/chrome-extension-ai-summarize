@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Multiple AI Summarizer",
   "version": "1.0",
-  "description": "Summarize selected text using multiple AI services. (OpenRouter, OpenAI(TBD), Ollama)",
+  "description": "Instantly summarize web content using cutting-edge AI technologies from OpenRouter, OpenAI(TBD), and Ollama with a single click.",
   "permissions": [
     "storage",
     "contextMenus",
