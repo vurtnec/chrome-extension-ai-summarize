@@ -61,7 +61,6 @@ const CONFIG = {
   }
 };
 
-// 创建上下文菜单
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "summarizeText",
@@ -70,7 +69,6 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// 处理上下文菜单点击
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "summarizeText") {
     chrome.tabs.sendMessage(tab.id, {

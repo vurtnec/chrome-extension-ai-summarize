@@ -5,14 +5,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const targetLangSelect = document.getElementById('targetLang');
   const saveButton = document.getElementById('saveButton');
   
-  // 从后台页面获取配置
   const config = await new Promise(resolve => {
     chrome.runtime.sendMessage({ action: 'getConfig' }, response => {
       resolve(response.config);
     });
   });
   
-  // 加载保存的设置
   const settings = await chrome.storage.sync.get(['service', 'model', 'targetLang']);
   const currentService = settings.service || 'openrouter';
   const currentLang = settings.targetLang || 'zh';
@@ -20,37 +18,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   serviceSelect.value = currentService;
   targetLangSelect.value = currentLang;
   
-  // 加载API密钥
   const apiKeyResult = await chrome.storage.sync.get([`${currentService}_api_key`]);
   apiKeyInput.value = apiKeyResult[`${currentService}_api_key`] || '';
   
-  // 更新模型选项
   function updateModelOptions(service) {
     const models = config.services[service].models;
     modelSelect.innerHTML = Object.entries(models)
       .map(([value, model]) => `<option value="${value}">${model.name}</option>`)
       .join('');
     
-    // 设置当前选中的模型
     if (settings.model && models[settings.model]) {
       modelSelect.value = settings.model;
     }
   }
   
-  // 初始化模型选项
   updateModelOptions(currentService);
   
-  // 服务切换时更新模型列表和API密钥
   serviceSelect.addEventListener('change', async (e) => {
     const service = e.target.value;
     updateModelOptions(service);
     
-    // 加载对应服务的API密钥
     const apiKeyResult = await chrome.storage.sync.get([`${service}_api_key`]);
     apiKeyInput.value = apiKeyResult[`${service}_api_key`] || '';
   });
   
-  // 保存设置
   saveButton.addEventListener('click', async () => {
     const service = serviceSelect.value;
     const model = modelSelect.value;
@@ -58,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const targetLang = targetLangSelect.value;
     
     try {
-      // 保存设置
       await chrome.storage.sync.set({
         service: service,
         model: model,
@@ -66,7 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         [`${service}_api_key`]: apiKey
       });
       
-      // 显示保存成功提示
       saveButton.classList.add('success');
       saveButton.innerHTML = `
         <span>Saved!</span>
