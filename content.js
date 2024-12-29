@@ -2,11 +2,14 @@ let isExtensionActive = true;
 
 function createPopup() {
   try {
-    const existingPopup = document.getElementById('summary-popup');
-    if (existingPopup) {
-      document.body.removeChild(existingPopup);
+    const existingContainer = document.querySelector('.ai-summarizer-popup');
+    if (existingContainer) {
+      document.body.removeChild(existingContainer);
     }
 
+    const container = document.createElement('div');
+    container.className = 'ai-summarizer-popup';
+    
     const popup = document.createElement('div');
     popup.id = 'summary-popup';
     popup.innerHTML = `
@@ -18,26 +21,28 @@ function createPopup() {
         </div>
       </div>
     `;
-    document.body.appendChild(popup);
+    
+    container.appendChild(popup);
+    document.body.appendChild(container);
     
     document.getElementById('summary-popup-close').addEventListener('click', () => {
-      closePopup(popup);
+      closePopup(container);
     });
 
     document.addEventListener('click', (event) => {
       if (!event.target.closest('#summary-popup')) {
-        const popup = document.getElementById('summary-popup');
-        if (popup) {
-          closePopup(popup);
+        const container = document.querySelector('.ai-summarizer-popup');
+        if (container) {
+          closePopup(container);
         }
       }
     });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
-        const popup = document.getElementById('summary-popup');
-        if (popup) {
-          closePopup(popup);
+        const container = document.querySelector('.ai-summarizer-popup');
+        if (container) {
+          closePopup(container);
         }
       }
     });
@@ -49,12 +54,15 @@ function createPopup() {
   }
 }
 
-function closePopup(popup) {
-  popup.style.opacity = '0';
-  popup.style.transform = 'translate(-50%, -48%)';
+function closePopup(container) {
+  const popup = container.querySelector('#summary-popup');
+  if (popup) {
+    popup.style.opacity = '0';
+    popup.style.transform = 'translate(-50%, -48%)';
+  }
   setTimeout(() => {
-    if (document.body.contains(popup)) {
-      document.body.removeChild(popup);
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
     }
   }, 300);
 }
