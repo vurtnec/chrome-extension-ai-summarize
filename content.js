@@ -1,6 +1,4 @@
-// 创建弹窗HTML
 function createPopup() {
-  // 先移除可能存在的旧弹窗
   const existingPopup = document.getElementById('summary-popup');
   if (existingPopup) {
     document.body.removeChild(existingPopup);
@@ -10,7 +8,7 @@ function createPopup() {
   popup.id = 'summary-popup';
   popup.innerHTML = `
     <span id="summary-popup-close">×</span>
-    <h2>文本摘要</h2>
+    <h2>Text Summary</h2>
     <div id="summary-popup-content">
       <div class="loading-container">
         <div class="loading-spinner"></div>
@@ -19,12 +17,10 @@ function createPopup() {
   `;
   document.body.appendChild(popup);
   
-  // 添加关闭按钮事件
   document.getElementById('summary-popup-close').addEventListener('click', () => {
     closePopup(popup);
   });
 
-  // 添加点击外部关闭
   document.addEventListener('click', (event) => {
     if (event.target.closest('#summary-popup')) return;
     const popup = document.getElementById('summary-popup');
@@ -33,7 +29,6 @@ function createPopup() {
     }
   });
 
-  // 添加 ESC 键关闭
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       const popup = document.getElementById('summary-popup');
@@ -56,19 +51,29 @@ function closePopup(popup) {
   }, 300);
 }
 
-function showSummary(text) {
+function showSummary(text, loading = false) {
   let popup = document.getElementById('summary-popup');
   if (!popup) {
     popup = createPopup();
   }
   const contentElement = popup.querySelector('#summary-popup-content');
-  contentElement.innerHTML = `<div class="summary-content">${text}</div>`;
+  
+  if (loading) {
+    contentElement.innerHTML = `
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p style="margin-top: 16px; color: #666;">Generating summary...</p>
+      </div>
+    `;
+  } else {
+    contentElement.innerHTML = `<div class="summary-content">${text}</div>`;
+  }
 }
 
-// 监听来自background script的消息
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "summarize") {
     createPopup();
+    showSummary('', true);
     
     chrome.runtime.sendMessage({
       action: "sendToOpenRouter",
@@ -83,11 +88,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// 添加快捷键支持
 document.addEventListener('keydown', (event) => {
   if (event.altKey && event.code === 'KeyS') {
     const selectedText = window.getSelection().toString();
     if (selectedText) {
+      createPopup();
+      showSummary('', true); 
+      
       chrome.runtime.sendMessage({
         action: "sendToOpenRouter",
         text: selectedText
@@ -99,7 +106,7 @@ document.addEventListener('keydown', (event) => {
         }
       });
     } else {
-      showSummary("No text selected. Please select some text first.");
+      showSummary("Please select text first.");
     }
   }
 }); 
