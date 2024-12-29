@@ -14,22 +14,29 @@
     
     <main>
       <div class="form-group">
-        <label for="apiKey">OpenRouter API Key</label>
+        <label for="service">Service</label>
+        <div class="select-wrapper">
+          <select id="service">
+            <option value="openrouter">OpenRouter</option>
+            <option value="openai">OpenAI</option>
+            <option value="ollama">Ollama (Local)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group api-key-group">
+        <label for="apiKey">API Key</label>
         <div class="input-wrapper">
           <input type="password" id="apiKey" placeholder="Enter your API key" required>
-          <span class="icon">🔑</span>
         </div>
       </div>
       
       <div class="form-group">
-        <label for="model">Default Model</label>
+        <label for="model">Model</label>
         <div class="select-wrapper">
           <select id="model">
-            <option value="deepseek/deepseek-chat">DeepSeek V3</option>
-            <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
-            <option value="openai/gpt-4o-mini">OpenAI GPT-4o-mini</option>
+            <!-- Will be populated by JavaScript -->
           </select>
-          <span class="icon">▼</span>
         </div>
       </div>
       
@@ -42,7 +49,6 @@
         </svg>
       </button>
     </main>
-    
   </div>
   <script src="popup.js"></script>
 </body>

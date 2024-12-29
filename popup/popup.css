@@ -1,4 +1,3 @@
-/* 基础样式重置 */
 body {
   margin: 0;
   padding: 16px;
@@ -14,7 +13,6 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* 标题样式 */
 header {
   margin-bottom: 24px;
 }
@@ -196,4 +194,31 @@ input:focus, select:focus {
     opacity: 1;
     transform: translate(-50%, -50%);
   }
+}
+
+/* 在现有样式后添加 */
+.api-key-group {
+  transition: all 0.3s ease;
+}
+
+.api-key-group.hidden {
+  display: none;
+}
+
+/* 成功状态的按钮样式 */
+.btn-primary.success {
+  background: #4CAF50;
+}
+
+/* 添加一些过渡效果 */
+.select-wrapper select,
+.input-wrapper input {
+  transition: all 0.2s ease;
+}
+
+/* 禁用状态样式 */
+select:disabled,
+input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

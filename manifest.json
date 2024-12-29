@@ -1,15 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "Vurtnec AI Summarizer",
+  "name": "Multiple AI Summarizer",
   "version": "1.0",
-  "description": "Summarize selected text using OpenRouter AI",
+  "description": "Summarize selected text using multiple AI services. (OpenRouter, OpenAI(TBD), Ollama)",
   "permissions": [
     "storage",
     "contextMenus",
     "activeTab"
   ],
   "host_permissions": [
-    "https://openrouter.ai/*"
+    "https://openrouter.ai/*",
+    "https://api.openai.com/v1/*",
+    "http://localhost:11434/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
   ],
   "action": {
     "default_popup": "popup/popup.html",
