@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const serviceSelect = document.getElementById('service');
   const modelSelect = document.getElementById('model');
+  const customModelSelect = document.getElementById('customModel');
   const apiKeyInput = document.getElementById('apiKey');
   const targetLangSelect = document.getElementById('targetLang');
   const saveButton = document.getElementById('saveButton');
@@ -11,12 +12,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
   
-  const settings = await chrome.storage.sync.get(['service', 'model', 'targetLang']);
+  const settings = await chrome.storage.sync.get(['service', 'model', 'targetLang', 'customModel']);
   const currentService = settings.service || 'openrouter';
   const currentLang = settings.targetLang || 'zh';
-  
   serviceSelect.value = currentService;
   targetLangSelect.value = currentLang;
+  customModelSelect.value = settings.customModel || '';
   
   const apiKeyResult = await chrome.storage.sync.get([`${currentService}_api_key`]);
   apiKeyInput.value = apiKeyResult[`${currentService}_api_key`] || '';
@@ -45,13 +46,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   saveButton.addEventListener('click', async () => {
     const service = serviceSelect.value;
     const model = modelSelect.value;
+    const customModel = customModelSelect.value;
     const apiKey = apiKeyInput.value;
     const targetLang = targetLangSelect.value;
-    
+
     try {
       await chrome.storage.sync.set({
         service: service,
         model: model,
+        customModel: customModel,
         targetLang: targetLang,
         [`${service}_api_key`]: apiKey
       });

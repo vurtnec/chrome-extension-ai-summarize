@@ -42,7 +42,6 @@ const CONFIG = {
       baseUrl: 'http://localhost:11434/api/chat',
       models: {
         'llama2': { name: 'Llama 2' },
-        'qwen2.5:7b': { name: 'Qwen 2.5 7B' },
         'qwen2.5-coder:14b': { name: 'Qwen 2.5 Coder 14B' }
       },
       headers: () => ({
@@ -79,9 +78,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 async function getCurrentService() {
-  const result = await chrome.storage.sync.get(['service', 'model']);
+  const result = await chrome.storage.sync.get(['service', 'model', 'customModel']);
   const service = result.service || 'openrouter';
-  const model = result.model || CONFIG.defaultModel;
+  const model = result.customModel || result.model || CONFIG.defaultModel;
   return { service, model };
 }
 
