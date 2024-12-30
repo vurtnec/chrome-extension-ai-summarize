@@ -56,6 +56,23 @@ const CONFIG = {
         stream: false
       }),
       formatResponse: (response) => response.message?.content
+    },
+    deepseek: {
+      name: 'Deepseek',
+      baseUrl: 'https://api.deepseek.com/chat/completions',
+      models: {
+        'deepseek-chat': { name: 'Deepseek Chat' },
+        'deepseek-coder': { name: 'Deepseek Coder' }
+      },
+      headers: (apiKey) => ({
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }),
+      formatRequest: (model, messages) => ({
+        model: model,
+        messages: messages
+      }),
+      formatResponse: (response) => response.choices[0]?.message?.content
     }
   }
 };
